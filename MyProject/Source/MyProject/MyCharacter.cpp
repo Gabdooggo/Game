@@ -12,6 +12,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnemyAI.h"
 #include "EnemyCharacter.h"
+#include "Animation/AnimInstance.h"
+#include "Animation/AnimMontage.h"
 using namespace std;
 
 // Sets default values
@@ -54,6 +56,7 @@ void AMyCharacter::BeginPlay()
            if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
            {
                Subsystem->AddMappingContext(MappingContext, 0);
+               Subsystem->AddMappingContext(Assasin, 1);
                
            }
        }
@@ -175,6 +178,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
             Input->BindAction(IA_Jump, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
             //Input->BindAction(IA_Jump, ETriggerEvent::Started, this, &AMyCharacter::Jumps);
             Input->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
+            Input->BindAction(IA_Dash, ETriggerEvent::Triggered, this, &AMyCharacter::Dash);
         }
 }
 
@@ -200,6 +204,19 @@ void AMyCharacter::Look(const FInputActionValue& Value)
 
 void AMyCharacter::Jumps(){
     
+}
+
+void AMyCharacter::Dash()
+{
+    if(!Dashes) return;
+    if (USkeletalMeshComponent* Mesh = GetMesh())
+    {
+        if (UAnimInstance* AnimInstance = Mesh->GetAnimInstance())
+        {
+            AnimInstance->Montage_Play(Dashes, 0.2f);
+            
+        }
+    }
 };
 
 

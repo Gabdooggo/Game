@@ -7,6 +7,7 @@
 #include "EnemyCharacter.generated.h"
 
 class AMyCharacter;
+class AEnemyAI;
 
 UCLASS()
 class MYPROJECT_API AEnemyCharacter : public ACharacter
@@ -39,11 +40,16 @@ public:
     void TakeDamageFromPlayer();
     
     UFUNCTION(BlueprintCallable)
+    void Invincible(float DeltaTime);
+    
+    UFUNCTION(BlueprintCallable)
     void DealDamageToPlayer();
     
     UPROPERTY(EditAnywhere, Category = "References")
     AMyCharacter* MyCharacter;
 
+    UPROPERTY(EditAnywhere, Category = "References")
+    AEnemyAI* EnemyAI;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

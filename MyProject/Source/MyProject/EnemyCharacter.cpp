@@ -26,6 +26,8 @@ AEnemyCharacter::AEnemyCharacter()
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+    ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+    MyCharacter = Cast<AMyCharacter>(Player);
 	
 }
 
@@ -38,15 +40,48 @@ void AEnemyCharacter::Tick(float DeltaTime)
 
 void AEnemyCharacter::DealDamageToPlayer()
 {
-    
+    if(MyCharacter && EnemyAI)
+    {
+        if(!MyCharacter->bInvin)
+        {
+            
+                MyCharacter->HP -= Damage;
+                MyCharacter->bInvin = true;}
+                
+            }
 }
 
 void AEnemyCharacter::TakeDamageFromPlayer()
 {
-    
+    if(MyCharacter && EnemyAI)
+    {
+        if(!bInvin)
+        {
+            HP -= MyCharacter->Damage;
+            bInvin = true;
+        }
+    }
+}
+
+void AEnemyCharacter::Invincible(float DeltaTime)
+{
+    if(bInvin)
+    {
+        Timer += DeltaTime;
+        if(Timer >= 0.5f)
+        {
+            bInvin = false;
+            Timer = 0.f;
+        }
+    }
 }
 
 void AEnemyCharacter::Dead()
 {
-    
+    if(EnemyAI && MyCharacter && HP <= 0)
+    {
+        EnemyAI->Perceive = false;
+        EnemyAI->Dead = true;
+        MyCharacter->Gold += Gold;
+    }
 }

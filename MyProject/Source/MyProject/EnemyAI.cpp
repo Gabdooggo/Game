@@ -170,7 +170,7 @@ void AEnemyAI::Death()
                 MoveToPlayer(Cast<APawn>(Actor));
                 Perceive = true;
             }
-            else if(!Stimulus.WasSuccessfullySensed()) {
+            else if(!Stimulus.WasSuccessfullySensed() && !Dead) {
                 Perceive = false;
                 MyBlueprintEvent();
             }

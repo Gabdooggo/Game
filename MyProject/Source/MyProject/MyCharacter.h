@@ -18,6 +18,7 @@ class AEnemyAI;
 class UInputMappingContext;
 class UInputAction;
 class AEnemyCharacter;
+class UAnimMontage;
 
 UCLASS()
 class MYPROJECT_API AMyCharacter : public ACharacter
@@ -74,6 +75,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Movement")
     void Jumps();
     
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    void Dash();
     
     UFUNCTION(BlueprintCallable, Category = "Gun")
     void StopFiring();
@@ -115,8 +118,17 @@ protected:
     UPROPERTY(VisibleAnywhere)
     AGun* CurrentGun;
     
-    UPROPERTY(VisibleAnywhere)
+    UPROPERTY(EditAnywhere, Category = "Animation")
+    UAnimMontage* Dashes;
+    
+    UPROPERTY(VisibleAnywhere, Category = "Mapping Context")
     UInputMappingContext* MappingContext;
+    
+    UPROPERTY(VisibleAnywhere, Category = "Mapping Context")
+    UInputMappingContext* Assasin;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+    UInputAction* IA_Dash;
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
         UInputAction* IA_Move;
