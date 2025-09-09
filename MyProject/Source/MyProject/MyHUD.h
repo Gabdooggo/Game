@@ -8,9 +8,14 @@
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "Components/EditableTextBox.h"
+#include "InputActionValue.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
 #include "MyHUD.generated.h"
 
 class AMyCharacter;
+class UInputMappingContext;
+class UInputAction;
 
 UCLASS()
 class MYPROJECT_API UMyHUD : public UUserWidget
@@ -38,6 +43,17 @@ public:
     
     virtual void NativeConstruct() override;
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+    
+    UPROPERTY(EditAnywhere, Category = "MappingContext")
+    UInputMappingContext* HUD;
+    
+    UPROPERTY(EditAnywhere, Category = "Input")
+    UInputAction* IA_Tab;
+    
+    
+    UFUNCTION(BlueprintCallable)
+    void Menu();
+    IN
     
 private:
     UPROPERTY(EditAnywhere, Category = "References")

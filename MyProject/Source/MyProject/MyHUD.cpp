@@ -5,6 +5,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "MyCharacter.h"
 #include "Blueprint/UserWidget.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Components/InputComponent.h"
+#include "MyCharacter.h"
 
 void UMyHUD::NativeConstruct()
 {
@@ -14,6 +18,7 @@ void UMyHUD::NativeConstruct()
     UpdateHealthBar();
     Golds();
 }
+
 
 void UMyHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -63,4 +68,19 @@ void UMyHUD::Golds()
     Gold->SetText(FText::AsNumber(Amount));
 }
 
+//void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+//{
+   // Super::SetupPlayerInputComponent(PlayerInputComponent);
+    
+   // if (UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+   // {
+   //  Input->BindAction(HUDInstance->IA_Tab, ETriggerEvent::Triggered, HUDInstance, &UMyHUD::Menu);
+   // }
+//}
+
+
+void UMyHUD::Menu()
+{
+    
+}
 

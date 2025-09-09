@@ -10,7 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MyCharacter.generated.h"
 
-
+class UMyHUD;
 class USpringArmComponent;
 class UCameraComponent;
 class AGun;
@@ -99,6 +99,15 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
     AEnemyAI* EnemyAI;
     
+    UPROPERTY(EditAnywhere, Category = "MappingContext")
+    UInputMappingContext* HUD;
+    
+    UPROPERTY(EditAnywhere, Category = "UI")
+    UMyHUD* HUDInstance;
+    
+    //UPROPERTY(EditAnywhere, Category="UI")
+    //TSubclassOf<UMyHUD> HUDClass;
+    
     public:
         // Called every frame
         virtual void Tick(float DeltaTime) override;
@@ -115,7 +124,7 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Gun")
     TSubclassOf<AGun> GunClass;
     
-    UPROPERTY(VisibleAnywhere)
+    UPROPERTY(EditAnywhere)
     AGun* CurrentGun;
     
     UPROPERTY(EditAnywhere, Category = "Animation")

@@ -14,6 +14,7 @@
 #include "EnemyCharacter.h"
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
+#include "MyHud.h"
 using namespace std;
 
 // Sets default values
@@ -57,6 +58,7 @@ void AMyCharacter::BeginPlay()
            {
                Subsystem->AddMappingContext(MappingContext, 0);
                Subsystem->AddMappingContext(Assasin, 1);
+               Subsystem->AddMappingContext(HUD, 2);
                
            }
        }
@@ -167,57 +169,60 @@ void AMyCharacter::Tick(float DeltaTime)
 // Called to bind functionality to input
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
     
     if (UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent))
-        {
-            Input->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AMyCharacter::Move);
-            Input->BindAction(IA_Fire, ETriggerEvent::Started, this, &AMyCharacter::StartFiring);
-            Input->BindAction(IA_Fire, ETriggerEvent::Completed, this, &AMyCharacter::StopFiring);
-            Input->BindAction(IA_Jump, ETriggerEvent::Started, this, &ACharacter::Jump);
-            Input->BindAction(IA_Jump, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-            //Input->BindAction(IA_Jump, ETriggerEvent::Started, this, &AMyCharacter::Jumps);
-            Input->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
-            Input->BindAction(IA_Dash, ETriggerEvent::Triggered, this, &AMyCharacter::Dash);
+    {
+        Input->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AMyCharacter::Move);
+        Input->BindAction(IA_Fire, ETriggerEvent::Started, this, &AMyCharacter::StartFiring);
+        Input->BindAction(IA_Fire, ETriggerEvent::Completed, this, &AMyCharacter::StopFiring);
+        Input->BindAction(IA_Jump, ETriggerEvent::Started, this, &ACharacter::Jump);
+        Input->BindAction(IA_Jump, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+        //Input->BindAction(IA_Jump, ETriggerEvent::Started, this, &AMyCharacter::Jumps);
+        Input->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
+        Input->BindAction(IA_Dash, ETriggerEvent::Triggered, this, &AMyCharacter::Dash);
+        if(HUDInstance){
+            Input->BindAction(HUDInstance->IA_Tab, ETriggerEvent::Triggered, HUDInstance, &UMyHUD::Menu);
         }
-}
-
-void AMyCharacter::Move(const FInputActionValue& Value)
-{
-    FVector2D MovementVector = Value.Get<FVector2D>();
-    FRotator Rotation = Controller->GetControlRotation();
-    FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
-    FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-        AddMovementInput(ForwardDirection, MovementVector.Y);
-    FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-        AddMovementInput(RightDirection, MovementVector.X);
-}
-
-void AMyCharacter::Look(const FInputActionValue& Value)
-{
-    if (Controller != nullptr){
-        FVector2D LookAxis = Value.Get<FVector2D>();
-        AddControllerYawInput(LookAxis.X);
-        AddControllerPitchInput(LookAxis.Y);
     }
 }
-
-void AMyCharacter::Jumps(){
     
-}
-
-void AMyCharacter::Dash()
-{
-    if(!Dashes) return;
-    if (USkeletalMeshComponent* Mesh = GetMesh())
+    void AMyCharacter::Move(const FInputActionValue& Value)
     {
-        if (UAnimInstance* AnimInstance = Mesh->GetAnimInstance())
+        FVector2D MovementVector = Value.Get<FVector2D>();
+        FRotator Rotation = Controller->GetControlRotation();
+        FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
+        FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+        AddMovementInput(ForwardDirection, MovementVector.Y);
+        FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+        AddMovementInput(RightDirection, MovementVector.X);
+    }
+    
+    void AMyCharacter::Look(const FInputActionValue& Value)
+    {
+        if (Controller != nullptr){
+            FVector2D LookAxis = Value.Get<FVector2D>();
+            AddControllerYawInput(LookAxis.X);
+            AddControllerPitchInput(LookAxis.Y);
+        }
+    }
+    
+    void AMyCharacter::Jumps()
+    {
+        
+    }
+    
+    void AMyCharacter::Dash()
+    {
+        if(!Dashes) return;
+        if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
         {
             AnimInstance->Montage_Play(Dashes, 0.2f);
             
         }
-    }
-};
+        
+        
+    };
 
 
 
