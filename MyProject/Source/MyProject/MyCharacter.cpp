@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
 #include "Gun.h"
+#include "Assasin.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EnhancedInputComponent.h"
@@ -44,6 +45,7 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+    Assasins = Cast<AAssasin>(GetController());
    if(EnemyCharacter){
        EnemyAI = Cast<AEnemyAI>(EnemyCharacter->GetController());}
     
@@ -164,6 +166,10 @@ void AMyCharacter::Tick(float DeltaTime)
     Death();
     Invincibility(DeltaTime);
     Burn(DeltaTime);
+    if(DashC != 0.f)
+    {
+        DashC -= DeltaTime;
+    }
 }
 
 // Called to bind functionality to input
@@ -180,7 +186,11 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
         Input->BindAction(IA_Jump, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
         //Input->BindAction(IA_Jump, ETriggerEvent::Started, this, &AMyCharacter::Jumps);
         Input->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
-        Input->BindAction(IA_Dash, ETriggerEvent::Triggered, this, &AMyCharacter::Dash);
+        Input->BindAction(IA_Dash, ETriggerEvent::Started, this, &AMyCharacter::Dash);
+        if (Assasins)
+        {
+            Assasins->AssasinDash();   // ✅ calls instance function
+        }
         if(HUDInstance){
             Input->BindAction(HUDInstance->IA_Tab, ETriggerEvent::Triggered, HUDInstance, &UMyHUD::Menu);
         }
@@ -215,10 +225,16 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     void AMyCharacter::Dash()
     {
         if(!Dashes) return;
-        if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+        Dashe = true;
+        if(DashC <= 0.0f)
         {
-            AnimInstance->Montage_Play(Dashes, 0.2f);
-            
+            if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+            {
+                AnimInstance->Montage_Play(Dashes, 0.2f);
+                DashC = 3.f;
+                Dashe = false;
+                
+            }
         }
         
         

@@ -19,6 +19,7 @@ class UInputMappingContext;
 class UInputAction;
 class AEnemyCharacter;
 class UAnimMontage;
+class AAssasin;
 
 UCLASS()
 class MYPROJECT_API AMyCharacter : public ACharacter
@@ -28,6 +29,12 @@ class MYPROJECT_API AMyCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMyCharacter();
+    
+    UPROPERTY(EditAnywhere, Category = "Dash")
+    float DashC = 0.f;
+    
+    UPROPERTY()
+    bool Dashe = false;
     
     UPROPERTY(EditAnywhere, Category = "Burn")
     float BTimer = 0.f;
@@ -104,6 +111,12 @@ public:
     
     UPROPERTY(EditAnywhere, Category = "UI")
     UMyHUD* HUDInstance;
+    
+    UPROPERTY(EditAnywhere, Category = "Abilities")
+    AAssasin* Assasins;
+    
+    UPROPERTY(EditAnywhere, Category="Abilities")
+    TSubclassOf<class AAssasin> AssasinControllerClass;
     
     //UPROPERTY(EditAnywhere, Category="UI")
     //TSubclassOf<UMyHUD> HUDClass;
