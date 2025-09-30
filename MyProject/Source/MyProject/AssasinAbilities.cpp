@@ -6,6 +6,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Components/InputComponent.h"
+#include "AssasinActor.h"
+#include "InputAction.h"
 
 // Sets default values for this component's properties
 UAssasinAbilities::UAssasinAbilities()
@@ -22,6 +24,9 @@ UAssasinAbilities::UAssasinAbilities()
 void UAssasinAbilities::BeginPlay()
 {
     Super::BeginPlay();
+    ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+    MyCharacter = Cast<AMyCharacter>(Player);
+    Owner = Cast<AAssasinActor>(GetOwner());
     
 	
 }
@@ -35,24 +40,11 @@ void UAssasinAbilities::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	// ...
 }
 
-void UAssasinAbilities::AssasinDash()
-{
-    MyCharacter->HP = 50;
-    UE_LOG(LogTemp, Warning, TEXT("AssasinDash did activate"));
-}
-
-void UAssasinAbilities::Assasin(UEnhancedInputComponent* Input)
-{
-    if(Input)
-    {
-        Input->BindAction(IA_Dash, ETriggerEvent::Started, this, &UAssasinAbilities::AssasinDash);
-    }
-}
 
 void UAssasinAbilities::SetupBindings(UEnhancedInputComponent* Input)
 {
     if (Input)
     {
-        Input->BindAction(IA_Dash, ETriggerEvent::Started, this, &UAssasinAbilities::AssasinDash);
+        Input->BindAction(Owner->IA_Dash, ETriggerEvent::Started, Owner, &AAssasinActor::AssasinDash);
     }
 }

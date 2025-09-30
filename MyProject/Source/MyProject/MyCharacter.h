@@ -20,6 +20,8 @@ class UInputAction;
 class AEnemyCharacter;
 class UAnimMontage;
 class AAssasin;
+class UAssasinAbilities;
+class AAssasinActor;
 
 UCLASS()
 class MYPROJECT_API AMyCharacter : public ACharacter
@@ -32,6 +34,9 @@ public:
     
     UPROPERTY(EditAnywhere, Category = "Dash")
     float DashC = 0.f;
+    
+    UPROPERTY()
+    bool bAssasin = false;
     
     UPROPERTY()
     bool Dashe = false;
@@ -117,6 +122,17 @@ public:
     
     UPROPERTY(EditAnywhere, Category="Abilities")
     TSubclassOf<class AAssasin> AssasinControllerClass;
+    
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+       UAssasinAbilities* AssasinAbility;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+    AAssasinActor* AssasinActor;
+    
+    UFUNCTION(BlueprintCallable)
+    void InitAbilityRef();
+    
+    UFUNCTION()
+    void references();
     
     //UPROPERTY(EditAnywhere, Category="UI")
     //TSubclassOf<UMyHUD> HUDClass;

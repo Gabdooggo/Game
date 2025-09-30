@@ -16,6 +16,8 @@
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
 #include "MyHud.h"
+#include "AssasinAbilities.h"
+#include "AssasinActor.h"
 using namespace std;
 
 // Sets default values
@@ -38,6 +40,7 @@ AMyCharacter::AMyCharacter()
         bUseControllerRotationYaw = false;
         GetCharacterMovement()->bOrientRotationToMovement = true;
     AutoPossessPlayer = EAutoReceiveInput::Player0;
+
     
 }
 
@@ -45,7 +48,7 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-    Assasins = Cast<AAssasin>(GetController());
+    
    if(EnemyCharacter){
        EnemyAI = Cast<AEnemyAI>(EnemyCharacter->GetController());}
     
@@ -89,6 +92,32 @@ void AMyCharacter::BeginPlay()
         }
 	
 }
+
+void AMyCharacter::InitAbilityRef()
+    {
+        // If not set in the editor, find one at runtime (pick one strategy):
+        if (!AssasinActor)
+        {
+            // A) first actor of that class in the level
+            AssasinActor = Cast<AAssasinActor>(
+                                               UGameplayStatics::GetActorOfClass(this, AAssasinActor::StaticClass()));}
+            // B) or find by tag you placed on the actor
+            // TArray<AActor*> Found;
+            // UGameplayStatics::GetAllActorsWithTag(this, FName("AbilityOwner"), Found);
+            // AbilityActorRef = Found.Num() ? Cast<AAssasinActor>(Found[0]) : nullptr;
+        if(!AssasinAbility && AssasinActor)
+        {
+            AssasinAbility = AssasinActor->FindComponentByClass<UAssasinAbilities>();
+            UE_LOG(LogTemp, Warning, TEXT("AssasinActor is not null"));}
+        if(AssasinAbility)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("AssasinAbility is not null"));
+            bAssasin = true;
+        }
+        else {
+            UE_LOG(LogTemp, Warning, TEXT("AssasinAbility is nulldd"));
+        }
+    }
 
 void AMyCharacter::Invincibility(float DeltaTime)
 {
@@ -187,10 +216,19 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
         //Input->BindAction(IA_Jump, ETriggerEvent::Started, this, &AMyCharacter::Jumps);
         Input->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
         Input->BindAction(IA_Dash, ETriggerEvent::Started, this, &AMyCharacter::Dash);
-        if (Assasins)
-        {
-            Assasins->AssasinDash();   // ✅ calls instance function
-        }
+            if (!AssasinAbility && !AssasinActor)
+            {
+                // References
+                InitAbilityRef();
+            }
+            if(AssasinAbility && AssasinActor)
+            {
+                UE_LOG(LogTemp, Warning, TEXT("AssasinAbility is not null"));
+                AssasinAbility->SetupBindings(Input);
+            }
+            else {
+                UE_LOG(LogTemp, Warning, TEXT("AssasinAbility is null"));
+            }
         if(HUDInstance){
             Input->BindAction(HUDInstance->IA_Tab, ETriggerEvent::Triggered, HUDInstance, &UMyHUD::Menu);
         }
@@ -237,6 +275,11 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
             }
         }
         
+        
+    }
+    
+    void AMyCharacter::references()
+    {
         
     };
 

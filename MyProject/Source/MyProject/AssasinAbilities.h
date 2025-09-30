@@ -7,10 +7,12 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Components/InputComponent.h"
+#include "InputMappingContext.h"
 #include "AssasinAbilities.generated.h"
 
+class UEnhancedInputComponent;
+class AAssasinActor;
 class AMyCharacter;
-class UInputAction;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class MYPROJECT_API UAssasinAbilities : public UActorComponent
@@ -30,19 +32,15 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
     
     UFUNCTION(BlueprintCallable)
-    void AssasinDash();
-        
-    UFUNCTION(BlueprintCallable)
-    void Assasin(UEnhancedInputComponent* Input);
+    void SetupBindings(UEnhancedInputComponent* Input);
     
-    UPROPERTY(EditAnywhere, Category = "Input")
-    UInputAction* IA_Dash;
+    UPROPERTY(VisibleAnywhere)
+    AAssasinActor* Owner;
     
-    UPROPERTY(EditAnywhere, Category = "References")
+    UPROPERTY(VisibleAnywhere)
     AMyCharacter* MyCharacter;
     
-    UFUNCTION(BlueprintCallable)
-    void SetupBindings(UEnhancedInputComponent* Input);
+    
 
 		
 };
