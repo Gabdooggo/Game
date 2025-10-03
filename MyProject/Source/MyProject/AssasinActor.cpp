@@ -35,6 +35,6 @@ void AAssasinActor::Tick(float DeltaTime)
 
 void AAssasinActor::AssasinDash()
 {
-    MyCharacter->HP = 50;
+    MyCharacter->HP -= 50;
     UE_LOG(LogTemp, Warning, TEXT("AssasinDash did activate"));
 }

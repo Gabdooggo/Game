@@ -19,6 +19,11 @@ UAssasinAbilities::UAssasinAbilities()
 	// ...
 }
 
+void UAssasinAbilities::OnRegister()
+{
+    Super::OnRegister();
+    Owner = Cast<AAssasinActor>(GetOwner());   // valid before BeginPlay
+}
 
 // Called when the game starts
 void UAssasinAbilities::BeginPlay()
@@ -26,8 +31,10 @@ void UAssasinAbilities::BeginPlay()
     Super::BeginPlay();
     ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
     MyCharacter = Cast<AMyCharacter>(Player);
-    Owner = Cast<AAssasinActor>(GetOwner());
-    
+    if(MyCharacter)
+    {
+        MyCharacter->bAssasinB = false;
+    }
 	
 }
 

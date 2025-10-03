@@ -34,6 +34,11 @@ public:
     
     UPROPERTY(EditAnywhere, Category = "Dash")
     float DashC = 0.f;
+    UPROPERTY(EditAnywhere, Category = "Dash")
+    float DashT = 0.f;
+    
+    UPROPERTY(EditAnywhere, Category = "Abilities")
+    bool bAssasinB = false;
     
     UPROPERTY()
     bool bAssasin = false;
@@ -105,6 +110,9 @@ public:
     UFUNCTION(BlueprintCallable)
     void Death();
     
+    UPROPERTY(EditAnywhere)
+    bool Movement = true;
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
     AEnemyCharacter* EnemyCharacter;
     
@@ -130,6 +138,9 @@ public:
     
     UFUNCTION(BlueprintCallable)
     void InitAbilityRef();
+    
+    UFUNCTION(BlueprintCallable)
+    void MappingContexts();
     
     UFUNCTION()
     void references();

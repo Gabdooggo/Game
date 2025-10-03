@@ -39,5 +39,8 @@ public:
     UFUNCTION(BlueprintCallable)
     void AssasinDash();
     
+    UPROPERTY(EditAnywhere)
+    bool bEquipped = true;
+    
 
 };

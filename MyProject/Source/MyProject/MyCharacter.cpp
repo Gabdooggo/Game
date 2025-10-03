@@ -57,17 +57,7 @@ void AMyCharacter::BeginPlay()
         UE_LOG(LogTemp, Warning, TEXT("AI did not take any damage"));
     }
     
-    if (APlayerController* PC = Cast<APlayerController>(Controller))
-       {
-           if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
-           {
-               Subsystem->AddMappingContext(MappingContext, 0);
-               Subsystem->AddMappingContext(Assasin, 1);
-               Subsystem->AddMappingContext(HUD, 2);
-               
-           }
-       }
-
+    MappingContexts();
     
     if (!Controller && GetWorld())
     {
@@ -91,6 +81,25 @@ void AMyCharacter::BeginPlay()
             CurrentGun->SetOwner(this);
         }
 	
+}
+
+void AMyCharacter::MappingContexts()
+{
+    if (APlayerController* PC = Cast<APlayerController>(Controller))
+       {
+           if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+           {
+               Subsystem->AddMappingContext(MappingContext, 0);
+               if(AssasinAbility && bAssasinB)
+               {
+                   Subsystem->AddMappingContext(Assasin, 1);
+                   UE_LOG(LogTemp, Warning, TEXT("AssasinActor did equip"))
+                   
+               }
+               Subsystem->AddMappingContext(HUD, 2);
+               
+           }
+       }
 }
 
 void AMyCharacter::InitAbilityRef()
@@ -192,12 +201,23 @@ void AMyCharacter::StopFiring()
 void AMyCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+    MappingContexts();
     Death();
     Invincibility(DeltaTime);
     Burn(DeltaTime);
     if(DashC != 0.f)
     {
         DashC -= DeltaTime;
+    }
+    if(DashT >= 0.f)
+    {
+        DashT -= DeltaTime;
+        Movement = false;
+        
+    }
+    else if(DashT <= 0.f)
+    {
+        Movement = true;
     }
 }
 
@@ -237,13 +257,16 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     
     void AMyCharacter::Move(const FInputActionValue& Value)
     {
-        FVector2D MovementVector = Value.Get<FVector2D>();
-        FRotator Rotation = Controller->GetControlRotation();
-        FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
-        FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-        AddMovementInput(ForwardDirection, MovementVector.Y);
-        FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-        AddMovementInput(RightDirection, MovementVector.X);
+        if(Movement)
+        {
+            FVector2D MovementVector = Value.Get<FVector2D>();
+            FRotator Rotation = Controller->GetControlRotation();
+            FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
+            FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+            AddMovementInput(ForwardDirection, MovementVector.Y);
+            FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+            AddMovementInput(RightDirection, MovementVector.X);
+        }
     }
     
     void AMyCharacter::Look(const FInputActionValue& Value)
@@ -268,8 +291,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
         {
             if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
             {
-                AnimInstance->Montage_Play(Dashes, 0.2f);
-                DashC = 3.f;
+                AnimInstance->Montage_Play(Dashes, 1.f);
+                DashC = 0.5f;
+                DashT = 0.5f;
                 Dashe = false;
                 
             }
