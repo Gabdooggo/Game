@@ -11,11 +11,14 @@
 #include "InputActionValue.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
 #include "MyHUD.generated.h"
 
 class AMyCharacter;
 class UInputMappingContext;
 class UInputAction;
+class UCanvasPanel;
 
 UCLASS()
 class MYPROJECT_API UMyHUD : public UUserWidget
@@ -28,6 +31,9 @@ public:
     
     UPROPERTY(meta=(BindWidget, EditAnywhere))
     UTextBlock* Gold;
+    
+    UPROPERTY(Meta=(BindWidget, EditAnywhere))
+    UCanvasPanel* RootCanvas;
     
     UFUNCTION(BlueprintCallable)
     void UpdateHealthBar();

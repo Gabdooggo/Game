@@ -252,6 +252,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
         if(HUDInstance){
             Input->BindAction(HUDInstance->IA_Tab, ETriggerEvent::Triggered, HUDInstance, &UMyHUD::Menu);
         }
+        else if(!HUDInstance){
+            UE_LOG(LogTemp, Warning, TEXT("HUDInstance is null"));
+        }
     }
 }
     

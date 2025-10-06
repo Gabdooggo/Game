@@ -81,6 +81,14 @@ void UMyHUD::Golds()
 
 void UMyHUD::Menu()
 {
+    RootCanvas->SetRenderTranslation(FVector2D(0.f, 1.f));
     
+    RootCanvas->SetRenderTransform(FWidgetTransform(
+           FVector2D(0.f, 1.f),   // Translation (X,Y)
+           FVector2D(1.f, 1.f),     // Scale
+           FVector2D(0.f, 0.f),     // Shear
+           0.f // Angle (deg)
+       ));
+    UE_LOG(LogTemp, Warning, TEXT("Menu is working"));
 }
 
