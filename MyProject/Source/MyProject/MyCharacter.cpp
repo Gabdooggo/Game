@@ -18,6 +18,8 @@
 #include "MyHud.h"
 #include "AssasinAbilities.h"
 #include "AssasinActor.h"
+#include "Blueprint/UserWidget.h"
+
 using namespace std;
 
 // Sets default values
@@ -103,30 +105,43 @@ void AMyCharacter::MappingContexts()
 }
 
 void AMyCharacter::InitAbilityRef()
+{
+    // If not set in the editor, find one at runtime (pick one strategy):
+    if (!AssasinActor)
     {
-        // If not set in the editor, find one at runtime (pick one strategy):
-        if (!AssasinActor)
-        {
-            // A) first actor of that class in the level
-            AssasinActor = Cast<AAssasinActor>(
-                                               UGameplayStatics::GetActorOfClass(this, AAssasinActor::StaticClass()));}
-            // B) or find by tag you placed on the actor
-            // TArray<AActor*> Found;
-            // UGameplayStatics::GetAllActorsWithTag(this, FName("AbilityOwner"), Found);
-            // AbilityActorRef = Found.Num() ? Cast<AAssasinActor>(Found[0]) : nullptr;
-        if(!AssasinAbility && AssasinActor)
-        {
-            AssasinAbility = AssasinActor->FindComponentByClass<UAssasinAbilities>();
-            UE_LOG(LogTemp, Warning, TEXT("AssasinActor is not null"));}
-        if(AssasinAbility)
-        {
-            UE_LOG(LogTemp, Warning, TEXT("AssasinAbility is not null"));
-            bAssasin = true;
-        }
-        else {
-            UE_LOG(LogTemp, Warning, TEXT("AssasinAbility is nulldd"));
-        }
+        // A) first actor of that class in the level
+        AssasinActor = Cast<AAssasinActor>(
+                                           UGameplayStatics::GetActorOfClass(this, AAssasinActor::StaticClass()));}
+    // B) or find by tag you placed on the actor
+    // TArray<AActor*> Found;
+    // UGameplayStatics::GetAllActorsWithTag(this, FName("AbilityOwner"), Found);
+    // AbilityActorRef = Found.Num() ? Cast<AAssasinActor>(Found[0]) : nullptr;
+    if(!AssasinAbility && AssasinActor)
+    {
+        AssasinAbility = AssasinActor->FindComponentByClass<UAssasinAbilities>();
+        UE_LOG(LogTemp, Warning, TEXT("AssasinActor is not null"));}
+    if(AssasinAbility)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("AssasinAbility is not null"));
+        bAssasin = true;
     }
+    else {
+        UE_LOG(LogTemp, Warning, TEXT("AssasinAbility is nulldd"));
+    }
+    
+   if (APlayerController* PC = Cast<APlayerController>(GetController()))
+  {
+      if(HUDClass)
+      {
+          // No Blueprint needed: use the C++ class directly
+          HUDInstance = CreateWidget<UMyHUD>(PC, HUDClass);
+      }
+      if (HUDInstance)
+      {
+          HUDInstance->AddToViewport();
+      }
+  }
+}
 
 void AMyCharacter::Invincibility(float DeltaTime)
 {
@@ -250,7 +265,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
                 UE_LOG(LogTemp, Warning, TEXT("AssasinAbility is null"));
             }
         if(HUDInstance){
-            Input->BindAction(HUDInstance->IA_Tab, ETriggerEvent::Triggered, HUDInstance, &UMyHUD::Menu);
+            Input->BindAction(IA_Tab, ETriggerEvent::Triggered, HUDInstance, &UMyHUD::Menu);
         }
         else if(!HUDInstance){
             UE_LOG(LogTemp, Warning, TEXT("HUDInstance is null"));

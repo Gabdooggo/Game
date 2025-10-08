@@ -119,11 +119,14 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "References")
     AEnemyAI* EnemyAI;
     
-    UPROPERTY(EditAnywhere, Category = "MappingContext")
+    UPROPERTY(VisibleAnywhere, Category = "MappingContext")
     UInputMappingContext* HUD;
     
-    UPROPERTY(EditAnywhere, Category = "UI")
+    UPROPERTY(VisibleAnywhere, Category = "UI")
     UMyHUD* HUDInstance;
+    
+    UPROPERTY(VisibleAnywhere, Category = "UI")
+    TSubclassOf<UMyHUD> HUDClass;
     
     UPROPERTY(EditAnywhere, Category = "Abilities")
     AAssasin* Assasins;
@@ -133,6 +136,7 @@ public:
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
        UAssasinAbilities* AssasinAbility;
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
     AAssasinActor* AssasinActor;
     
@@ -172,6 +176,9 @@ protected:
     
     UPROPERTY(VisibleAnywhere, Category = "Mapping Context")
     UInputMappingContext* MappingContext;
+    
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    UInputAction* IA_Tab;
     
     UPROPERTY(VisibleAnywhere, Category = "Mapping Context")
     UInputMappingContext* Assasin;

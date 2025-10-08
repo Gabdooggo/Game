@@ -32,8 +32,14 @@ public:
     UPROPERTY(meta=(BindWidget, EditAnywhere))
     UTextBlock* Gold;
     
-    UPROPERTY(Meta=(BindWidget, EditAnywhere))
+UPROPERTY(Meta=(BindWidget, EditAnywhere))
     UCanvasPanel* RootCanvas;
+    
+    UPROPERTY(EditAnywhere)
+    bool Tab = true;
+    
+    UPROPERTY()
+    float Mark = 0.f;
     
     UFUNCTION(BlueprintCallable)
     void UpdateHealthBar();
@@ -49,18 +55,13 @@ public:
     
     virtual void NativeConstruct() override;
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-    
-    UPROPERTY(EditAnywhere, Category = "MappingContext")
-    UInputMappingContext* HUD;
-    
-    UPROPERTY(EditAnywhere, Category = "Input")
-    UInputAction* IA_Tab;
-    
+    virtual void NativeOnInitialized() override;
     
     UFUNCTION(BlueprintCallable)
     void Menu();
-    IN
     
+    UFUNCTION(BlueprintCallable)
+    void Menus();
 private:
     UPROPERTY(EditAnywhere, Category = "References")
     AMyCharacter* MyCharacter;

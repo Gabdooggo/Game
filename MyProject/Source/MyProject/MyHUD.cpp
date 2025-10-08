@@ -19,6 +19,11 @@ void UMyHUD::NativeConstruct()
     Golds();
 }
 
+void UMyHUD::NativeOnInitialized()
+{
+    Super::NativeOnInitialized();
+    
+}
 
 void UMyHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -78,17 +83,84 @@ void UMyHUD::Golds()
    // }
 //}
 
+void UMyHUD::Menus()
+{
+    if(Tab)
+    {
+        if (!RootCanvas)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Menu(): RootCanvas is null"));
+            return;
+        }
+        if (UCanvasPanelSlot* Slot = Cast<UCanvasPanelSlot>(RootCanvas->Slot))
+        {
+            // Make positioning absolute (top-left) so X/Y works predictably
+            Slot->SetAnchors(FAnchors(0.f, 0.f, 0.f, 0.f));
+            Slot->SetAlignment(FVector2D(0.f, 0.f));       // pivot at top-left
+            Slot->SetAutoSize(false);
+            
+            // Move the child canvas (pixels)
+            FVector2D pos = Slot->GetPosition();
+            pos.X += 0.f;                                // e.g., slide right 200
+            pos.Y += -1100.f;                                // e.g., down 100
+            Slot->SetPosition(pos);
+            Tab = false;
+        }
+    }
+}
+
 
 void UMyHUD::Menu()
 {
-    RootCanvas->SetRenderTranslation(FVector2D(0.f, 1.f));
+    Mark += 1;
+    if (!RootCanvas)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Menu(): RootCanvas is null"));
+        return;
+    }
     
-    RootCanvas->SetRenderTransform(FWidgetTransform(
-           FVector2D(0.f, 1.f),   // Translation (X,Y)
-           FVector2D(1.f, 1.f),     // Scale
-           FVector2D(0.f, 0.f),     // Shear
-           0.f // Angle (deg)
-       ));
-    UE_LOG(LogTemp, Warning, TEXT("Menu is working"));
+    if(Mark <= 1)
+    {
+        if (UCanvasPanelSlot* Slot = Cast<UCanvasPanelSlot>(RootCanvas->Slot))
+        {
+            // Make positioning absolute (top-left) so X/Y works predictably
+            Slot->SetAnchors(FAnchors(0.f, 0.f, 0.f, 0.f));
+            Slot->SetAlignment(FVector2D(0.f, 0.f));       // pivot at top-left
+            Slot->SetAutoSize(false);
+            
+            // Move the child canvas (pixels)
+            FVector2D pos = Slot->GetPosition();
+            pos.X += 0.f;                                // e.g., slide right 200
+            pos.Y += -1100.f;                                // e.g., down 100
+            Slot->SetPosition(pos);
+            Tab = true;
+            
+        }
+    }
+    
+    if(Mark > 1)
+    {
+        Tab = false;
+    }
+    
+    if(!Tab)
+    {
+        if (UCanvasPanelSlot* Slot = Cast<UCanvasPanelSlot>(RootCanvas->Slot))
+        {
+            // Make positioning absolute (top-left) so X/Y works predictably
+            Slot->SetAnchors(FAnchors(0.f, 0.f, 0.f, 0.f));
+            Slot->SetAlignment(FVector2D(0.f, 0.f));       // pivot at top-left
+            Slot->SetAutoSize(false);
+            
+            // Move the child canvas (pixels)
+            FVector2D pos = Slot->GetPosition();
+            pos.X += 0.f;                                // e.g., slide right 200
+            pos.Y += 1100.f;                                // e.g., down 100
+            Slot->SetPosition(pos);
+            Mark = 0.f;
+            Tab = true;
+        }
+    }
 }
+
 
