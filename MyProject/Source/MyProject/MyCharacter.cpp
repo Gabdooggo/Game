@@ -156,6 +156,26 @@ void AMyCharacter::Invincibility(float DeltaTime)
     }
 }
 
+void AMyCharacter::Cursor()
+{
+    if(bTab)
+    {
+        if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+        {
+            PC->bShowMouseCursor = true;
+            PC->SetInputMode(FInputModeGameAndUI());
+        }
+    }
+    if(!bTab)
+    {
+        if(APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+        {
+            PC->bShowMouseCursor = false;
+            PC->SetInputMode(FInputModeGameOnly());
+        }
+    }
+}
+
 void AMyCharacter::Burn(float DeltaTime)
 {
     if(bBInvin)
@@ -220,6 +240,7 @@ void AMyCharacter::Tick(float DeltaTime)
     Death();
     Invincibility(DeltaTime);
     Burn(DeltaTime);
+    Cursor();
     if(DashC != 0.f)
     {
         DashC -= DeltaTime;

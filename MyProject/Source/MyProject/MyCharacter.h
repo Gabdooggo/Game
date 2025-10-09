@@ -32,8 +32,12 @@ public:
 	// Sets default values for this character's properties
 	AMyCharacter();
     
+    UPROPERTY()
+    bool bTab;
+    
     UPROPERTY(EditAnywhere, Category = "Dash")
     float DashC = 0.f;
+    
     UPROPERTY(EditAnywhere, Category = "Dash")
     float DashT = 0.f;
     
@@ -109,6 +113,9 @@ public:
         
     UFUNCTION(BlueprintCallable)
     void Death();
+    
+    UFUNCTION(blueprintCallable)
+    void Cursor();
     
     UPROPERTY(EditAnywhere)
     bool Movement = true;

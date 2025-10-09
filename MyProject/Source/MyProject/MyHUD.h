@@ -13,6 +13,7 @@
 #include "InputMappingContext.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Components/Button.h"
 #include "MyHUD.generated.h"
 
 class AMyCharacter;
@@ -26,6 +27,16 @@ class MYPROJECT_API UMyHUD : public UUserWidget
 	GENERATED_BODY()
     
 public:
+    
+    UPROPERTY()
+    float Location = 1100.f;;
+    
+    UPROPERTY(meta = (BindWidget))
+    UButton* Abilities;
+    
+    UPROPERTY(meta = (BindWidget))
+    UButton* Map;
+    
     UPROPERTY(meta=(BindWidget))
     UProgressBar* HealthBar;
     
@@ -61,7 +72,11 @@ UPROPERTY(Meta=(BindWidget, EditAnywhere))
     void Menu();
     
     UFUNCTION(BlueprintCallable)
-    void Menus();
+    void AbilitiesM();
+    
+    UFUNCTION(BlueprintCallable)
+    void MapM();
+    
 private:
     UPROPERTY(EditAnywhere, Category = "References")
     AMyCharacter* MyCharacter;
