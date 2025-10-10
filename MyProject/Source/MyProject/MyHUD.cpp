@@ -17,6 +17,11 @@ void UMyHUD::NativeConstruct()
     MyCharacter = Cast<AMyCharacter>(Player);
     UpdateHealthBar();
     Golds();
+}
+
+void UMyHUD::NativeOnInitialized()
+{
+    Super::NativeOnInitialized();
     if(Abilities)
     {
         Abilities->OnClicked.AddDynamic(this, &UMyHUD::AbilitiesM);
@@ -27,11 +32,6 @@ void UMyHUD::NativeConstruct()
         Map->OnClicked.AddDynamic(this, &UMyHUD::MapM);
         UE_LOG(LogTemp, Warning, TEXT("Map is not null"));
     }
-}
-
-void UMyHUD::NativeOnInitialized()
-{
-    Super::NativeOnInitialized();
     
 }
 

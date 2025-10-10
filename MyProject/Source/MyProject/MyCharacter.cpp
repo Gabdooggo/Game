@@ -19,6 +19,8 @@
 #include "AssasinAbilities.h"
 #include "AssasinActor.h"
 #include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+#include "GameFramework/PlayerController.h"
 
 using namespace std;
 
@@ -160,15 +162,18 @@ void AMyCharacter::Cursor()
 {
     if(bTab)
     {
-        if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+        if (APlayerController* PC = Cast<APlayerController>(GetController()))
         {
+            FInputModeGameAndUI InputMode;
+            PC->bEnableClickEvents = true;
             PC->bShowMouseCursor = true;
-            PC->SetInputMode(FInputModeGameAndUI());
+            PC->SetInputMode(InputMode);
+            InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
         }
     }
     if(!bTab)
     {
-        if(APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+        if(APlayerController* PC = Cast<APlayerController>(GetController()))
         {
             PC->bShowMouseCursor = false;
             PC->SetInputMode(FInputModeGameOnly());
