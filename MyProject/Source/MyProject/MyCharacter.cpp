@@ -167,8 +167,12 @@ void AMyCharacter::Cursor()
             FInputModeGameAndUI InputMode;
             PC->bEnableClickEvents = true;
             PC->bShowMouseCursor = true;
-            PC->SetInputMode(InputMode);
             InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+            if (HUDInstance)                        // the same instance you AddToViewport()
+                {
+                    InputMode.SetWidgetToFocus(HUDInstance->TakeWidget());
+                }
+                PC->SetInputMode(InputMode);
         }
     }
     if(!bTab)

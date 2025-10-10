@@ -22,16 +22,7 @@ void UMyHUD::NativeConstruct()
 void UMyHUD::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
-    if(Abilities)
-    {
-        Abilities->OnClicked.AddDynamic(this, &UMyHUD::AbilitiesM);
-        UE_LOG(LogTemp, Warning, TEXT("Abilities is not null"));
-    }
-    if(Map)
-    {
-        Map->OnClicked.AddDynamic(this, &UMyHUD::MapM);
-        UE_LOG(LogTemp, Warning, TEXT("Map is not null"));
-    }
+
     
 }
 
@@ -96,7 +87,7 @@ void UMyHUD::Golds()
 void UMyHUD::AbilitiesM()
 {
     UE_LOG(LogTemp, Warning, TEXT("Abilities button was pressed"));
-    Location = 2200.f;
+    Location = 2400.f;
     Mark -= 1;
     Menu();
 }
@@ -126,11 +117,11 @@ void UMyHUD::Menu()
             Slot->SetAnchors(FAnchors(0.f, 0.f, 0.f, 0.f));
             Slot->SetAlignment(FVector2D(0.f, 0.f));       // pivot at top-left
             Slot->SetAutoSize(false);
-            
             // Move the child canvas (pixels)
             FVector2D pos = Slot->GetPosition();
+            pos.Y = 1100.f;
             pos.X += 0.f;                                // e.g., slide right 200
-            pos.Y -= Location;                                // e.g., down 100
+            pos.Y -= Location; // e.g., down 100
             Slot->SetPosition(pos);
             MyCharacter->bTab = true;
             // ✅ Show or hide mouse cursor and input mode
@@ -158,6 +149,7 @@ void UMyHUD::Menu()
             Mark = 0.f;
             Tab = true;
             MyCharacter->bTab = false;
+            Location = 1100.f;
         }
     }
 }
