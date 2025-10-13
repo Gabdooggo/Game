@@ -187,6 +187,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Input")
     UInputAction* IA_Tab;
     
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    UInputAction* IA_esc;
+    
     UPROPERTY(VisibleAnywhere, Category = "Mapping Context")
     UInputMappingContext* Assasin;
     

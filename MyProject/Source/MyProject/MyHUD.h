@@ -5,21 +5,18 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/ProgressBar.h"
-#include "Components/TextBlock.h"
-#include "Components/EditableTextBox.h"
-#include "InputActionValue.h"
-#include "InputAction.h"
-#include "InputMappingContext.h"
-#include "Components/CanvasPanel.h"
-#include "Components/CanvasPanelSlot.h"
-#include "Components/Button.h"
 #include "MyHUD.generated.h"
 
 class AMyCharacter;
 class UInputMappingContext;
 class UInputAction;
 class UCanvasPanel;
+class UProgressBar;
+class UTextBlock;
+class UEditableTextBox;
+class UCanvasPanelSlot;
+class UButton;
+class UCheckBox;
 
 UCLASS()
 class MYPROJECT_API UMyHUD : public UUserWidget
@@ -27,6 +24,15 @@ class MYPROJECT_API UMyHUD : public UUserWidget
 	GENERATED_BODY()
     
 public:
+    
+    UPROPERTY()
+    bool escape = false;
+    
+    UPROPERTY()
+    int32 ZCounter;
+    
+    UPROPERTY()
+    int32 Current;
     
     UPROPERTY()
     float Location = 1100.f;;
@@ -37,20 +43,34 @@ public:
     UPROPERTY(meta = (BindWidget))
     UButton* Map;
     
+    UPROPERTY(meta = (BindWidget))
+    UButton* AssasinCheck;
+    
+    UPROPERTY(meta = (BindWidget))
+    UButton* LifeSteal;
+    
     UPROPERTY(meta=(BindWidget))
     UProgressBar* HealthBar;
     
     UPROPERTY(meta=(BindWidget, EditAnywhere))
     UTextBlock* Gold;
     
-UPROPERTY(Meta=(BindWidget, EditAnywhere))
+UPROPERTY(meta=(BindWidget, EditAnywhere))
     UCanvasPanel* RootCanvas;
+    
+    UPROPERTY(meta=(BindWidget, EditAnywhere))
+    UCanvasPanel* AssasinAbilities;
+    UPROPERTY(EditAnywhere)
+    bool bHovered = false;
     
     UPROPERTY(EditAnywhere)
     bool Tab = true;
     
     UPROPERTY()
     float Mark = 0.f;
+    
+    UFUNCTION(BlueprintCallable)
+    void ZOrder();
     
     UFUNCTION(BlueprintCallable)
     void UpdateHealthBar();
@@ -64,6 +84,12 @@ UPROPERTY(Meta=(BindWidget, EditAnywhere))
     UFUNCTION(BlueprintCallable)
     void Golds();
     
+    UFUNCTION(BlueprintCallable)
+    void UnHovered();
+    
+    UFUNCTION(BlueprintCallable)
+    void Hovered();
+    
     virtual void NativeConstruct() override;
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
     virtual void NativeOnInitialized() override;
@@ -72,10 +98,16 @@ UPROPERTY(Meta=(BindWidget, EditAnywhere))
     void Menu();
     
     UFUNCTION(BlueprintCallable)
+    void esc();
+    
+    UFUNCTION(BlueprintCallable)
     void AbilitiesM();
     
     UFUNCTION(BlueprintCallable)
     void MapM();
+    
+    UFUNCTION(BlueprintCallable)
+    void AssasinAbility();
     
 private:
     UPROPERTY(EditAnywhere, Category = "References")

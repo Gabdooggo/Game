@@ -9,6 +9,16 @@
 #include "EnhancedInputSubsystems.h"
 #include "Components/InputComponent.h"
 #include "MyCharacter.h"
+#include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
+#include "Components/EditableTextBox.h"
+#include "InputActionValue.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Components/Button.h"
+#include "Components/CheckBox.h"
 
 void UMyHUD::NativeConstruct()
 {
@@ -31,6 +41,10 @@ void UMyHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
     Super::NativeTick(MyGeometry, InDeltaTime);
     UpdateHealthBar();
     Golds();
+    if (AssasinCheck && AssasinCheck->IsHovered())
+    {
+        UE_LOG(LogTemp, Verbose, TEXT("Checkbox hovered"));
+    }
 }
 
 void UMyHUD::UpdateHealthBar()
@@ -74,6 +88,41 @@ void UMyHUD::Golds()
     Gold->SetText(FText::AsNumber(Amount));
 }
 
+void UMyHUD::ZOrder()
+{
+    if(UCanvasPanelSlot* Slot = Cast<UCanvasPanelSlot>(AssasinAbilities->Slot))
+    {
+        if(!escape)
+        {
+            Slot->SetZOrder(1);
+        }
+        
+        else if(escape)
+        {
+            Slot->SetZOrder(0);
+        }
+    }
+    
+}
+
+void UMyHUD::AssasinAbility()
+{
+    
+    MyCharacter->bAssasinB = true;
+}
+
+void UMyHUD::Hovered()
+{
+    AssasinCheck->SetBackgroundColor(FLinearColor(0.503f, 0.503f, 0.503f, 1.0f)); // RGBA 0–1
+    LifeSteal->SetBackgroundColor(FLinearColor(0.503f, 0.503f, 0.503f, 1.0f)); // RGBA 0–1
+}
+
+void UMyHUD::UnHovered()
+{
+    AssasinCheck->SetBackgroundColor(FLinearColor(0.0f, 0.0f, 0.0f, 1.0f)); // RGBA 0–1
+    LifeSteal->SetBackgroundColor(FLinearColor(0.0f, 0.0f, 0.0f, 1.0f)); // RGBA 0–1
+}
+
 //void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 //{
    // Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -87,7 +136,7 @@ void UMyHUD::Golds()
 void UMyHUD::AbilitiesM()
 {
     UE_LOG(LogTemp, Warning, TEXT("Abilities button was pressed"));
-    Location = 2400.f;
+    Location = 2250.f;
     Mark -= 1;
     Menu();
 }
@@ -152,4 +201,11 @@ void UMyHUD::Menu()
             Location = 1100.f;
         }
     }
+}
+
+void UMyHUD::esc()
+{
+    escape = true;
+    ZOrder();
+    escape = false;
 }
