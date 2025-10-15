@@ -4,6 +4,7 @@
 #include "MyHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "MyCharacter.h"
+#include "AssasinActor.h"
 #include "Blueprint/UserWidget.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -17,7 +18,9 @@
 #include "InputMappingContext.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Components/PanelWidget.h"
 #include "Components/Button.h"
+#include "Components/ButtonSlot.h"
 #include "Components/CheckBox.h"
 
 void UMyHUD::NativeConstruct()
@@ -27,11 +30,14 @@ void UMyHUD::NativeConstruct()
     MyCharacter = Cast<AMyCharacter>(Player);
     UpdateHealthBar();
     Golds();
+    AbilitiesF();
+    References();
 }
 
 void UMyHUD::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
+    References();
 
     
 }
@@ -41,6 +47,7 @@ void UMyHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
     Super::NativeTick(MyGeometry, InDeltaTime);
     UpdateHealthBar();
     Golds();
+    AbilitiesF();
     if (AssasinCheck && AssasinCheck->IsHovered())
     {
         UE_LOG(LogTemp, Verbose, TEXT("Checkbox hovered"));
@@ -86,23 +93,6 @@ void UMyHUD::Golds()
         Amount = MyCharacter->Gold;
     }
     Gold->SetText(FText::AsNumber(Amount));
-}
-
-void UMyHUD::ZOrder()
-{
-    if(UCanvasPanelSlot* Slot = Cast<UCanvasPanelSlot>(AssasinAbilities->Slot))
-    {
-        if(!escape)
-        {
-            Slot->SetZOrder(1);
-        }
-        
-        else if(escape)
-        {
-            Slot->SetZOrder(0);
-        }
-    }
-    
 }
 
 void UMyHUD::AssasinAbility()
@@ -173,6 +163,7 @@ void UMyHUD::Menu()
             pos.Y -= Location; // e.g., down 100
             Slot->SetPosition(pos);
             MyCharacter->bTab = true;
+            IsTab = true;
             // ✅ Show or hide mouse cursor and input mode
         }
     }
@@ -199,13 +190,82 @@ void UMyHUD::Menu()
             Tab = true;
             MyCharacter->bTab = false;
             Location = 1100.f;
+            IsTab = false;
+            
         }
     }
 }
 
 void UMyHUD::esc()
 {
-    escape = true;
-    ZOrder();
-    escape = false;
+    if(IsTab)
+    {
+        if(Current == 0)
+        {
+            MapM();
+            //Menu();
+        }
+        else{
+            
+        }
+        escape = true;
+        ZOrder();
+        escape = false;
+    }
+    else{
+        
+    }
+}
+
+void UMyHUD::AbilitiesF()
+{
+    if (UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(AssasinCheck->Slot))
+       {
+           if(MyCharacter && AssasinActor->bequipped)
+           {
+               CanvasSlot->SetZOrder(1);
+           }
+           else{
+               CanvasSlot->SetZOrder(0);
+               
+                }
+       }
+    //if(UPanelWidget* Parent = AssasinCheck->GetParent())
+   // {
+       // if(MyCharacter && MyCharacter->bequipped)
+       // {
+            //AssasinCheck->RemoveFromParent();
+       // }
+ //   }
+   // else{
+        
+   // }
+}
+
+void UMyHUD::ZOrder()
+{
+    if(UCanvasPanelSlot* Slot = Cast<UCanvasPanelSlot>(AssasinAbilities->Slot))
+    {
+        if(!escape)
+        {
+            Current = 1;
+            Slot->SetZOrder(Current);
+        }
+        
+        else if(escape)
+        {
+            Current = 0;
+            Slot->SetZOrder(Current);
+        }
+    }
+    
+}
+
+void UMyHUD::References()
+{
+    if (!AssasinActor)
+    {
+        // A) first actor of that class in the level
+        AssasinActor = Cast<AAssasinActor>(
+                                           UGameplayStatics::GetActorOfClass(this, AAssasinActor::StaticClass()));}
 }

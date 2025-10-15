@@ -23,6 +23,7 @@ void AAssasinActor::BeginPlay()
 	Super::BeginPlay();
     ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
     MyCharacter = Cast<AMyCharacter>(Player);
+    Equip();
 	
 }
 
@@ -30,6 +31,7 @@ void AAssasinActor::BeginPlay()
 void AAssasinActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+    Equip();
 
 }
 
@@ -37,4 +39,12 @@ void AAssasinActor::AssasinDash()
 {
     MyCharacter->HP -= 50;
     UE_LOG(LogTemp, Warning, TEXT("AssasinDash did activate"));
+}
+
+void AAssasinActor::Equip()
+{
+    if(MyCharacter->DeathMark == 1)
+    {
+        bequipped = true;
+    }
 }

@@ -40,7 +40,10 @@ public:
     void AssasinDash();
     
     UPROPERTY(EditAnywhere)
-    bool bEquipped = true;
+    bool bequipped = false;
+    
+    UFUNCTION(BlueprintCallable)
+    void Equip();
     
 
 };

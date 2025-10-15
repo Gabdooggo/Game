@@ -140,6 +140,7 @@ void AMyCharacter::InitAbilityRef()
       }
       if (HUDInstance)
       {
+          HUDInstance->References();
           HUDInstance->AddToViewport();
       }
   }

@@ -17,6 +17,9 @@ class UEditableTextBox;
 class UCanvasPanelSlot;
 class UButton;
 class UCheckBox;
+class UPanelWidget;
+class UButtonSlot;
+class AAssasinActor;
 
 UCLASS()
 class MYPROJECT_API UMyHUD : public UUserWidget
@@ -59,12 +62,19 @@ UPROPERTY(meta=(BindWidget, EditAnywhere))
     UCanvasPanel* RootCanvas;
     
     UPROPERTY(meta=(BindWidget, EditAnywhere))
+    UCanvasPanel* AbilitiesCanvas;
+    
+    UPROPERTY(meta=(BindWidget, EditAnywhere))
     UCanvasPanel* AssasinAbilities;
+    
     UPROPERTY(EditAnywhere)
     bool bHovered = false;
     
     UPROPERTY(EditAnywhere)
     bool Tab = true;
+    
+    UPROPERTY()
+    bool IsTab;
     
     UPROPERTY()
     float Mark = 0.f;
@@ -107,7 +117,16 @@ UPROPERTY(meta=(BindWidget, EditAnywhere))
     void MapM();
     
     UFUNCTION(BlueprintCallable)
+    void AbilitiesF();
+    
+    UFUNCTION()
+    void References();
+    
+    UFUNCTION(BlueprintCallable)
     void AssasinAbility();
+    
+    UPROPERTY(EditAnywhere, Category="Components")
+    AAssasinActor* AssasinActor;
     
 private:
     UPROPERTY(EditAnywhere, Category = "References")
@@ -115,6 +134,5 @@ private:
     
     UPROPERTY()
     APawn* PlayerPawn;
-    
 	
 };
