@@ -136,6 +136,7 @@ void AEnemyAI::Death()
             Perceive = false;
             Dead = true;
             MyCharacter->Gold += EnemyCharacter->Gold;
+            MyCharacter->DeathMark += 1;
             }
     if(!EnemyCharacter || !MyCharacter)
     {

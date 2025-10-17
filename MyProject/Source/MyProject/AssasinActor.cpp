@@ -14,7 +14,6 @@ AAssasinActor::AAssasinActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
     AssasinAbilities = CreateDefaultSubobject<UAssasinAbilities>(TEXT("AssasinAbilities"));
-
 }
 
 // Called when the game starts or when spawned
@@ -32,7 +31,6 @@ void AAssasinActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
     Equip();
-
 }
 
 void AAssasinActor::AssasinDash()

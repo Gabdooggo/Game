@@ -36,9 +36,6 @@ public:
     float DeathMark = 0.f;
     
     UPROPERTY()
-    bool bequipped = false;
-    
-    UPROPERTY()
     bool bTab;
     
     UPROPERTY(EditAnywhere, Category = "Dash")

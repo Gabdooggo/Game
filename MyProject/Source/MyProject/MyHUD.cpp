@@ -28,16 +28,15 @@ void UMyHUD::NativeConstruct()
     Super::NativeConstruct();
     ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
     MyCharacter = Cast<AMyCharacter>(Player);
+    References();
     UpdateHealthBar();
     Golds();
     AbilitiesF();
-    References();
 }
 
 void UMyHUD::NativeOnInitialized()
 {
     Super::NativeOnInitialized();
-    References();
 
     
 }
@@ -45,6 +44,7 @@ void UMyHUD::NativeOnInitialized()
 void UMyHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
     Super::NativeTick(MyGeometry, InDeltaTime);
+    References();
     UpdateHealthBar();
     Golds();
     AbilitiesF();
@@ -87,12 +87,15 @@ int32 UMyHUD::GetMaxHP() const
 
 void UMyHUD::Golds()
 {
-    int32 Amount = 0;
-    if(MyCharacter)
+    if(Gold)
     {
-        Amount = MyCharacter->Gold;
+        int32 Amount = 0;
+        if(MyCharacter)
+        {
+            Amount = MyCharacter->Gold;
+        }
+        Gold->SetText(FText::AsNumber(Amount));
     }
-    Gold->SetText(FText::AsNumber(Amount));
 }
 
 void UMyHUD::AssasinAbility()
@@ -221,9 +224,9 @@ void UMyHUD::AbilitiesF()
 {
     if (UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(AssasinCheck->Slot))
        {
-           if(MyCharacter && AssasinActor->bequipped)
+           if(AssasinActor && AssasinActor->bequipped)
            {
-               CanvasSlot->SetZOrder(1);
+            CanvasSlot->SetZOrder(1);
            }
            else{
                CanvasSlot->SetZOrder(0);
@@ -263,9 +266,8 @@ void UMyHUD::ZOrder()
 
 void UMyHUD::References()
 {
-    if (!AssasinActor)
+    if (!AssasinActor && MyCharacter)
     {
-        // A) first actor of that class in the level
-        AssasinActor = Cast<AAssasinActor>(
-                                           UGameplayStatics::GetActorOfClass(this, AAssasinActor::StaticClass()));}
+        AssasinActor = MyCharacter->AssasinActor;
+    }
 }

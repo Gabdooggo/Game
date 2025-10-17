@@ -83,6 +83,6 @@ void AEnemyCharacter::Dead()
         EnemyAI->Perceive = false;
         EnemyAI->Dead = true;
         MyCharacter->Gold += Gold;
-        MyCharacter->DeathMark += 1.f;
+        MyCharacter->DeathMark += 1;
     }
 }
