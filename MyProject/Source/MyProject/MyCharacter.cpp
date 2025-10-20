@@ -161,27 +161,24 @@ void AMyCharacter::Invincibility(float DeltaTime)
 
 void AMyCharacter::Cursor()
 {
-    if(bTab)
+    if (APlayerController* PC = Cast<APlayerController>(GetController()))
     {
-        if (APlayerController* PC = Cast<APlayerController>(GetController()))
+        if(bTab)
         {
-            FInputModeGameAndUI InputMode;
-            PC->bEnableClickEvents = true;
-            PC->bShowMouseCursor = true;
-            InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-            if (HUDInstance)                        // the same instance you AddToViewport()
+                FInputModeGameAndUI InputMode;
+                PC->bEnableClickEvents = true;
+                PC->bShowMouseCursor = true;
+                InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+                if (HUDInstance)                        // the same instance you AddToViewport()
                 {
                     InputMode.SetWidgetToFocus(HUDInstance->TakeWidget());
                 }
                 PC->SetInputMode(InputMode);
         }
-    }
-    if(!bTab)
-    {
-        if(APlayerController* PC = Cast<APlayerController>(GetController()))
+        if(!bTab)
         {
-            PC->bShowMouseCursor = false;
-            PC->SetInputMode(FInputModeGameOnly());
+                PC->bShowMouseCursor = false;
+                PC->SetInputMode(FInputModeGameOnly());
         }
     }
 }
@@ -282,6 +279,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
         //Input->BindAction(IA_Jump, ETriggerEvent::Started, this, &AMyCharacter::Jumps);
         Input->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
         Input->BindAction(IA_Dash, ETriggerEvent::Started, this, &AMyCharacter::Dash);
+        Input->BindAction(IA_RightClick, ETriggerEvent::Started, this, &AMyCharacter::Aim);
             if (!AssasinAbility && !AssasinActor)
             {
                 // References
@@ -341,7 +339,10 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
         {
             if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
             {
+                const FVector Dir = GetActorForwardVector();
+                const float Speed = 2400.f;
                 AnimInstance->Montage_Play(Dashes, 1.f);
+               LaunchCharacter(Dir * Speed, true, false);
                 DashC = 0.5f;
                 DashT = 0.5f;
                 Dashe = false;
@@ -351,6 +352,12 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
         
         
     }
+
+void AMyCharacter::Aim()
+{
+    HUDInstance->bCrossHair = true;
+    UE_LOG(LogTemp, Warning, TEXT("Right Click/Aim does work"));
+}
     
     void AMyCharacter::references()
     {

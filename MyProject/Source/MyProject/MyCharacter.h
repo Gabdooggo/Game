@@ -117,9 +117,11 @@ public:
     UFUNCTION(BlueprintCallable)
     void Death();
     
-    UFUNCTION(blueprintCallable)
+    UFUNCTION(BlueprintCallable)
     void Cursor();
     
+    UFUNCTION(BlueprintCallable)
+    void Aim();
     UPROPERTY(EditAnywhere)
     bool Movement = true;
     
@@ -210,5 +212,8 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
         UInputAction* IA_Fire;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+        UInputAction* IA_RightClick;
     
 };

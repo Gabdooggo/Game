@@ -22,6 +22,7 @@
 #include "Components/Button.h"
 #include "Components/ButtonSlot.h"
 #include "Components/CheckBox.h"
+#include "Components/Image.h"
 
 void UMyHUD::NativeConstruct()
 {
@@ -32,6 +33,7 @@ void UMyHUD::NativeConstruct()
     UpdateHealthBar();
     Golds();
     AbilitiesF();
+    CrossHair();
 }
 
 void UMyHUD::NativeOnInitialized()
@@ -48,6 +50,7 @@ void UMyHUD::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
     UpdateHealthBar();
     Golds();
     AbilitiesF();
+    CrossHair();
     if (AssasinCheck && AssasinCheck->IsHovered())
     {
         UE_LOG(LogTemp, Verbose, TEXT("Checkbox hovered"));
@@ -95,6 +98,26 @@ void UMyHUD::Golds()
             Amount = MyCharacter->Gold;
         }
         Gold->SetText(FText::AsNumber(Amount));
+    }
+}
+
+void UMyHUD::CrossHair()
+{
+    if (UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(CrossHairI->Slot))
+    {
+        FVector2D pos = CanvasSlot->GetPosition();
+        if(!bCrossHair)
+        {
+            pos.Y = 1500;
+            CanvasSlot->SetPosition(pos);
+        }
+        if(bCrossHair)
+        {
+            pos.Y = 452;
+            CanvasSlot->SetPosition(pos);
+            
+            
+        }
     }
 }
 

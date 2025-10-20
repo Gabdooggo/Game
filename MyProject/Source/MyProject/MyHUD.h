@@ -20,6 +20,7 @@ class UCheckBox;
 class UPanelWidget;
 class UButtonSlot;
 class AAssasinActor;
+class UImage;
 
 UCLASS()
 class MYPROJECT_API UMyHUD : public UUserWidget
@@ -27,6 +28,9 @@ class MYPROJECT_API UMyHUD : public UUserWidget
 	GENERATED_BODY()
     
 public:
+    
+    UPROPERTY()
+    bool bCrossHair = false;
     
     UPROPERTY()
     bool escape = false;
@@ -57,6 +61,9 @@ public:
     
     UPROPERTY(meta=(BindWidget, EditAnywhere))
     UTextBlock* Gold;
+    
+    UPROPERTY(meta=(BindWidget, EditAnywhere))
+    UImage* CrossHairI;
     
 UPROPERTY(meta=(BindWidget, EditAnywhere))
     UCanvasPanel* RootCanvas;
@@ -124,6 +131,9 @@ UPROPERTY(meta=(BindWidget, EditAnywhere))
     
     UFUNCTION(BlueprintCallable)
     void AssasinAbility();
+    
+    UFUNCTION(BlueprintCallable)
+    void CrossHair();
     
     UPROPERTY(EditAnywhere, Category="Components")
     AAssasinActor* AssasinActor;
