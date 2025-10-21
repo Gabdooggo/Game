@@ -32,6 +32,12 @@ public:
 	// Sets default values for this character's properties
 	AMyCharacter();
     
+    UPROPERTY(EditAnywhere, Category="Movement")
+    float CurrentSpeed = 500.f;
+    
+    UPROPERTY()
+    bool bLooking;
+    
     UPROPERTY()
     float DeathMark = 0.f;
     
@@ -121,7 +127,10 @@ public:
     void Cursor();
     
     UFUNCTION(BlueprintCallable)
-    void Aim();
+    void AimStart();
+    
+    UFUNCTION(BlueprintCallable)
+    void AimEnd();
     UPROPERTY(EditAnywhere)
     bool Movement = true;
     
@@ -214,6 +223,6 @@ protected:
         UInputAction* IA_Fire;
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
-        UInputAction* IA_RightClick;
+        UInputAction* Right_Click_Aim;
     
 };

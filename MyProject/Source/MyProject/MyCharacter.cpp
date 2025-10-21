@@ -43,6 +43,7 @@ AMyCharacter::AMyCharacter()
 
         bUseControllerRotationYaw = false;
         GetCharacterMovement()->bOrientRotationToMovement = true;
+    GetCharacterMovement()->MaxWalkSpeed = 500.f;
     AutoPossessPlayer = EAutoReceiveInput::Player0;
 
     
@@ -248,6 +249,7 @@ void AMyCharacter::Tick(float DeltaTime)
     Invincibility(DeltaTime);
     Burn(DeltaTime);
     Cursor();
+    bLooking = false;
     if(DashC != 0.f)
     {
         DashC -= DeltaTime;
@@ -279,7 +281,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
         //Input->BindAction(IA_Jump, ETriggerEvent::Started, this, &AMyCharacter::Jumps);
         Input->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
         Input->BindAction(IA_Dash, ETriggerEvent::Started, this, &AMyCharacter::Dash);
-        Input->BindAction(IA_RightClick, ETriggerEvent::Started, this, &AMyCharacter::Aim);
+        Input->BindAction(Right_Click_Aim, ETriggerEvent::Started, this, &AMyCharacter::AimStart);
+        Input->BindAction(Right_Click_Aim, ETriggerEvent::Completed, this, &AMyCharacter::AimEnd);
             if (!AssasinAbility && !AssasinActor)
             {
                 // References
@@ -320,6 +323,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     void AMyCharacter::Look(const FInputActionValue& Value)
     {
         if (Controller != nullptr){
+            bLooking = true;
             FVector2D LookAxis = Value.Get<FVector2D>();
             AddControllerYawInput(LookAxis.X);
             AddControllerPitchInput(LookAxis.Y);
@@ -353,13 +357,29 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
         
     }
 
-void AMyCharacter::Aim()
+void AMyCharacter::AimStart()
 {
     HUDInstance->bCrossHair = true;
+    bUseControllerRotationYaw = true;
+    auto* Move = GetCharacterMovement();
+    Move->bOrientRotationToMovement = false;   // stop auto-face movement
+    Move->MaxWalkSpeed = CurrentSpeed / 5;
+        // (optional for “snappy” feel while aiming)
+        //Move->RotationRate = FRotator(0.f, 9999.f, 0.f);
     UE_LOG(LogTemp, Warning, TEXT("Right Click/Aim does work"));
 }
+
+void AMyCharacter::AimEnd()
+{
+    HUDInstance->bCrossHair = false;
+    bUseControllerRotationYaw = false;
+    auto* Move = GetCharacterMovement();
+    Move->bOrientRotationToMovement = true;
+    Move->MaxWalkSpeed = CurrentSpeed;
+    UE_LOG(LogTemp, Warning, TEXT("Right Click/AimEnd does work"));
+}
     
-    void AMyCharacter::references()
+void AMyCharacter::references()
     {
         
     };
