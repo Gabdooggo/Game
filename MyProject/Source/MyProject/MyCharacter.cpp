@@ -44,6 +44,7 @@ AMyCharacter::AMyCharacter()
         bUseControllerRotationYaw = false;
         GetCharacterMovement()->bOrientRotationToMovement = true;
     GetCharacterMovement()->MaxWalkSpeed = 500.f;
+    GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);
     AutoPossessPlayer = EAutoReceiveInput::Player0;
 
     
@@ -363,10 +364,10 @@ void AMyCharacter::AimStart()
     bUseControllerRotationYaw = true;
     auto* Move = GetCharacterMovement();
     Move->bOrientRotationToMovement = false;   // stop auto-face movement
-    Move->MaxWalkSpeed = CurrentSpeed / 5;
+    Move->MaxWalkSpeed = CurrentSpeed / 3;
         // (optional for “snappy” feel while aiming)
-        //Move->RotationRate = FRotator(0.f, 9999.f, 0.f);
-    UE_LOG(LogTemp, Warning, TEXT("Right Click/Aim does work"));
+        Move->RotationRate = FRotator(0.f, 120.f, 0.f);
+    //UE_LOG(LogTemp, Warning, TEXT("Right Click/Aim does work"));
 }
 
 void AMyCharacter::AimEnd()
@@ -376,7 +377,8 @@ void AMyCharacter::AimEnd()
     auto* Move = GetCharacterMovement();
     Move->bOrientRotationToMovement = true;
     Move->MaxWalkSpeed = CurrentSpeed;
-    UE_LOG(LogTemp, Warning, TEXT("Right Click/AimEnd does work"));
+    GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);
+    //UE_LOG(LogTemp, Warning, TEXT("Right Click/AimEnd does work"));
 }
     
 void AMyCharacter::references()
